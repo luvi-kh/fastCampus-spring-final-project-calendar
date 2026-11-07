@@ -1,0 +1,23 @@
+java -jar calendar-batch/build/libs/calendar-batch-0.0.1-SNAPSHOT.jar --spring.batch.job.names=simpleJob version=1
+java -jar calendar-batch/build/libs/calendar-batch-0.0.1-SNAPSHOT.jar --spring.batch.job.names=allReadJob version=1
+java -jar calendar-batch/build/libs/calendar-batch-0.0.1-SNAPSHOT.jar --spring.batch.job.names=sendEmailAlarmJob version=6
+java -Dspring.batch.job.names=sendEmailAlarmJob -jar /home/user1/practice/fastCampus_springframework/fastCampus-spring-final-project-calendar/calendar-batch/build/libs/calendar-batch-0.0.1-SNAPSHOT.jar
+
+# insert dummy schedules
+insert into calendar_db.schedules (schedule_type, start_at, title, writer_id, created_at, updated_at)
+values ('NOTIFICATION', NOW() + INTERVAL 10 MINUTE, concat('아침 수영10-', uuid()), 3, NOW(), NOW());
+insert into calendar_db.schedules (schedule_type, start_at, title, writer_id, created_at, updated_at)
+values ('NOTIFICATION', NOW() + INTERVAL 11 MINUTE, concat('아침 수영11-', uuid()), 3, NOW(), NOW());
+insert into calendar_db.schedules (schedule_type, start_at, title, writer_id, created_at, updated_at)
+values ('NOTIFICATION', NOW() + INTERVAL 12 MINUTE, concat('아침 수영12-', uuid()), 3, NOW(), NOW());
+
+# insert dummy engagements
+INSERT INTO calendar_db.schedules (schedule_type, start_at, end_at, title, writer_id, created_at, updated_at)
+values ('EVENT', NOW() + interval 11 MINUTE, NOW() + interval 30 MINUTE, concat('회의회의', uuid()), 1, NOW(), NOW());
+INSERT INTO calendar_db.engagements (request_status, attendee_id, schedule_id, created_at, updated_at)
+values ('ACCEPTED', 3, (select id from schedules order by id desc limit 1), NOW(), NOW());
+
+crontab -e
+
+chmod +x cron_test.sh
+chmod +x batch_cron.sh
